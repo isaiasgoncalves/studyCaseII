@@ -19,6 +19,11 @@ A gestão do fundo multimercado da Hipótese Capital precisa de ferramentas para
 - `data/proxies.csv`: Preços diários de OLEO3 e FUEL3 (Jun/2021 a Jun/2026).
 - `data/marcacoes.csv`: 11 marcações semestrais (M1 a M11).
 
+## Conceitos Chave para a Fase 2 (Ex Post)
+- **Ancoragem (Anchoring):** Garantir que a trajetória estimada passe exatamente por dois pontos fixos ($M_{10}$ e $M_{11}$).
+- **Drift de Ajuste:** Cálculo de um fator constante ($\alpha$) a ser subtraído/somado aos retornos diários para reconciliar a divergência entre proxies e ativo.
+- **Preservação de Volatilidade:** O ajuste deve ser distribuído de forma que a "forma" da curva (os movimentos diários das proxies) seja mantida, corrigindo apenas a tendência (bias).
+
 ## Restrições do Agente
 - **Proteção de Arquivos:** NÃO edite o arquivo `instructions.md` sob nenhuma circunstância.
 - **Consistência:** As estimativas devem partir rigorosamente dos valores de marcação nas datas especificadas.

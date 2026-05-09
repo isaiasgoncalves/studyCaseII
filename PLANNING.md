@@ -1,39 +1,45 @@
 # Planejamento de Execução: Case Study Hipótese Capital
 
-Este planejamento detalha os passos técnicos para cumprir as três fases do case, focando na precisão dos cálculos financeiros e na usabilidade das ferramentas solicitadas.
+## 1. Fase 1: Projeção Ex Ante (CONCLUÍDO ✅)
+*Objetivo: Estimar o valor diário da empresa após M10 usando proxies de mercado.*
 
-## Fluxo de Trabalho e Tarefas
+### Atividades Realizadas:
+- **Tratamento de Dados:** Importação de CSVs, conversão de tipos e indexação temporal (`datetime`).
+- **Engenharia de Atributos:** 
+    - Cálculo de **Retornos Simples** individuais para `OLEO3` e `FUEL3`.
+    - Cálculo do **Retorno do Portfólio (50/50)** via média aritmética dos retornos simples (representando rebalanceamento diário).
+    - Conversão para **Retorno Logarítmico** para garantir **aditividade temporal** e evitar o viés de capitalização.
+- **Modelagem:** 
+    - Acumulação via `cumsum()` e aplicação da fórmula $V_{M10} \cdot e^{\sum r_{log}}$.
+    - Identificação de Gap: Projeção estimou **511.39** vs Realidade de **325.66** na M11.
+- **Ferramenta:** Implementação da função `return_marker_estimate` com lógica **AsOf** para tratar fins de semana e feriados.
+- **Análise Crítica:** Discussão sobre Choques Idiosincráticos (atraso na captação) vs Fatores Sistêmicos (setor de petróleo).
 
-### 1. Preparação dos Dados (Fundação)
-- [ ] **Carregamento:** Ler `proxies.csv` e `marcacoes.csv`.
-- [ ] **Tratamento Temporal:** Converter datas e garantir que ambos os datasets compartilhem o mesmo calendário de dias úteis.
-- [ ] **Cálculo de Retornos:** Gerar retornos diários logarítmicos ou percentuais para as proxies.
+---
 
-### 2. Fase 1: Projeção Ex Ante (fase_1.ipynb)
-*Objetivo: Estimar o valor pós-M10 (30/12/2025) usando média simples dos retornos de OLEO3 e FUEL3.*
-- [ ] **Implementação da Lógica:** Criar a série de retornos médios (50% OLEO3, 50% FUEL3).
-- [ ] **Acumulação:** Partir do valor de M10 (397,14) e aplicar os retornos acumulados dia a dia.
-- [ ] **Criação da Ferramenta:** Função `estimar_valor_ex_ante(data)` que retorna o valor exato para qualquer input após M10.
-- [ ] **Análise Crítica:** Documentar limitações (ex: falta de prêmio de risco, volatilidade não capturada).
+## 2. Fase 2: Reestimativa Ex Post (PRÓXIMO PASSO 🚀)
+*Objetivo: Criar a trajetória "real" que conecta M10 a M11, ajustando a divergência observada.*
 
-### 3. Fase 2: Reestimativa Ex Post (fase_2.ipynb)
-*Objetivo: Conectar M10 a M11 (325,66) preservando a volatilidade das proxies, apesar da queda do ativo.*
-- [ ] **Cálculo do Gap:** Identificar a diferença entre a projeção baseada puramente em proxies e o valor real de M11.
-- [ ] **Método de Ajuste:** Implementar uma técnica de "fração de ajuste" ou "drift corretivo" distribuído ao longo do semestre.
-- [ ] **Criação da Ferramenta:** Função `estimar_valor_ex_post(data)` para consulta entre M10 e M11.
-- [ ] **Reflexão Quantitativa:** Explicar como o "gap" foi distribuído (linearmente nos retornos vs. ajuste no preço final).
+### Tarefas Planejadas:
+- [ ] **Cálculo do Erro Logarítmico Total:** Diferença entre $\ln(M_{11}/M_{10})$ e a soma dos retornos das proxies.
+- [ ] **Distribuição do Drift:** Calcular o ajuste diário constante ($\alpha = \text{Erro Total} / \text{Dias Úteis}$) para "puxar" a curva para o valor real.
+- [ ] **Implementação da Curva Ajustada:** Aplicar o drift aos retornos diários e gerar a nova série de preços.
+- [ ] **Ferramenta Ex Post:** Criar função de consulta específica para o período M10-M11.
+- [ ] **Validação:** Garantir que o valor final no dia da M11 seja exatamente **325.66**.
 
-### 4. Fase 3: Visualização Comparativa (fase_3.ipynb)
-*Objetivo: Comparar a "expectativa" (Ex Ante) com a "realidade" (Ex Post).*
-- [ ] **Gráfico Integrado:** Plotar M1 a M11 como pontos, e as duas trajetórias entre M10 e M11.
-- [ ] **Análise de Divergência:** Plotar o gráfico de resíduos (Ex Ante - Ex Post) ao longo do tempo.
-- [ ] **Insights:** Identificar o ponto de inflexão onde o problema de captação (específico da empresa) começou a pesar mais que o setor.
+---
 
-### 5. Finalização e Documentação
-- [ ] **Apresentação:** Criar o PPT com a defesa das decisões técnicas e trade-offs.
-- [ ] **Repositório:** Garantir commits progressivos e README claro.
+## 3. Fase 3: Visualização Comparativa
+*Objetivo: Mostrar o gap entre Expectativa (Fase 1) e Realidade (Fase 2).*
 
-## Cronograma Sugerido (Urgente - Hoje)
-1. **Próxima hora:** Finalizar Fase 1 e ferramenta de input.
-2. **Segunda hora:** Resolver o desafio matemático da Fase 2 (Ajuste Ex Post).
-3. **Terceira hora:** Visualizações e reflexões analíticas.
+### Tarefas Planejadas:
+- [ ] **Gráfico de Trajetórias:** Plotar as duas curvas sobrepostas.
+- [ ] **Gráfico de Divergência:** Série temporal do resíduo (Ex Ante - Ex Post).
+- [ ] **Análise de Inflexão:** Identificar visualmente quando os problemas de captação começaram a descolar a empresa do setor.
+
+---
+
+## Cronograma (Hoje)
+- **Fase 1:** 100% concluída.
+- **Fase 2:** Início imediato (Matemática de Ancoragem).
+- **Fase 3:** Finalização e Slides.
